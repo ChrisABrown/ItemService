@@ -18,30 +18,39 @@ public class ItemController implements ItemApi {
     public ResponseEntity<Item> createItem(Item body) {
         Item response = service.createItem(body);
 
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return ResponseEntity.ok().body(response);
     }
 
     @Override
     public ResponseEntity<Item> deleteItem(String id) {
         Item response = service.deleteItem(id);
+        if (response == null) {
 
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok().body(response);
     }
 
     @Override
     public ResponseEntity<Item> getAllItems(Item body) {
-        Item response = service.getAllItems(body)
+        Item response = service.getAllItems(body);
+
+        return ResponseEntity.ok().body(response);
     }
 
     @Override
     public ResponseEntity<Item> getItem(String id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getItem'");
+        Item response = service.getItem(id);
+
+        return ResponseEntity.ok().body(response);
+
     }
 
     @Override
     public ResponseEntity<Item> updateItem(Item body) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateItem'");
+        Item response = service.updateItem(body);
+
+        return ResponseEntity.ok().body(response);
     }
 
 }
