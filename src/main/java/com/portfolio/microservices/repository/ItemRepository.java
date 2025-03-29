@@ -1,15 +1,11 @@
 package com.portfolio.microservices.repository;
 
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
-import com.portfolio.microservices.suprimeapi.model.Item;
+import com.portfolio.microservices.domain.ItemDomain;
 
 @Repository
-public class ItemRepository {
-
-    public Item saveItem(Item body) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'saveItem'");
-    }
+public interface ItemRepository extends MongoRepository<ItemDomain, String> {
 
 }
