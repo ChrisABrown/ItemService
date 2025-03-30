@@ -3,6 +3,8 @@ package com.portfolio.microservices.domain;
 import java.math.BigDecimal;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -13,13 +15,22 @@ import com.portfolio.microservices.suprimeapi.model.Item.SizeEnum;
 public class ItemDomain {
 
     @Id
+    @JsonProperty("itemId")
     private String itemId = null;
+    @JsonProperty("itemName")
     private String itemName = null;
+    @JsonProperty("category")
     private String category = null;
+    @JsonProperty("SKU")
     private String SKU = null;
+    @JsonProperty("price")
     private BigDecimal price = null;
+    @JsonProperty("description")
     private String description = null;
+    @JsonProperty("image")
     private String image = null;
+    @JsonProperty("size")
+    @Valid
     private List<SizeEnum> size = null;
 
     public String getItemId() {

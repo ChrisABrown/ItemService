@@ -197,7 +197,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Item'
         '500':
-            description: Internal Sever Error
+            description: Something went wrong
       security:
         - suprime_auth:
           - "write:items"
@@ -243,9 +243,11 @@ paths:
       requestBody:
           description: get all items from database
           content:
-            application/json:
+            application/json:              
               schema:
-                $ref: '#/components/schemas/Item'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Item'
 
       responses:
         '200':
@@ -297,18 +299,8 @@ paths:
           schema:
             type: string
       responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Item'
-        '400':
-          description: Bad request
         '404':
           description: Not Found
-        '500':
-          description: Internal Server Error
       security:
         - suprime_auth:
           - "write:items"

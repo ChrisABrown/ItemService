@@ -1,8 +1,8 @@
 package com.portfolio.microservices.repository;
 
-import org.springframework.stereotype.Repository;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import com.portfolio.microservices.domain.UserDomain;
 
-@Repository
-public class UserRepository {
+public interface UserRepository extends MongoRepository<UserDomain, String> {
 
 }

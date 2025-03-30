@@ -1,7 +1,8 @@
 package com.portfolio.microservices.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,35 +23,29 @@ public class ItemController implements ItemApi {
     }
 
     @Override
-    public ResponseEntity<Item> deleteItem(String id) {
-        Item response = service.deleteItem(id);
-        if (response == null) {
-
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok().body(response);
+    public void deleteItem(String id) {
+        service.deleteItem(id);
     }
 
     @Override
-    public ResponseEntity<Item> getAllItems(Item body) {
-        Item response = service.getAllItems(body);
+    public ResponseEntity<List<Item>> getAllItems(List<Item> items) {
+        items = service.getAllItems();
 
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.ok().body(items);
     }
 
     @Override
     public ResponseEntity<Item> getItem(String id) {
-        Item response = service.getItem(id);
+        Item gItem = service.getItem(id);
 
-        return ResponseEntity.ok().body(response);
-
+        return ResponseEntity.ok().body(gItem);
     }
 
     @Override
     public ResponseEntity<Item> updateItem(Item body) {
-        Item response = service.updateItem(body);
+        Item uItem = service.updateItem(body);
 
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.ok().body(uItem);
     }
 
 }

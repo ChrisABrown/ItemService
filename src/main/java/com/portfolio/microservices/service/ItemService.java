@@ -1,5 +1,8 @@
 package com.portfolio.microservices.service;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +19,13 @@ public class ItemService {
     private ItemDomain mapModelToDomain(Item item) {
         ItemDomain itemDomain = new ItemDomain();
         itemDomain.setItemId(itemDomain.getItemId());
+        itemDomain.setCategory(itemDomain.getCategory());
+        itemDomain.setDescription(itemDomain.getDescription());
+        itemDomain.setImage(itemDomain.getImage());
+        itemDomain.setItemName(itemDomain.getItemName());
+        itemDomain.setPrice(itemDomain.getPrice());
+        itemDomain.setSKU(itemDomain.getSKU());
+        itemDomain.setSize(itemDomain.getSize());
 
         return itemDomain;
     }
@@ -23,6 +33,14 @@ public class ItemService {
     private Item mapDomainToModel(ItemDomain domain) {
         Item item = new Item();
         item.setItemId(item.getItemId());
+        item.setItemId(item.getItemId());
+        item.setCategory(item.getCategory());
+        item.setDescription(item.getDescription());
+        item.setImage(item.getImage());
+        item.setItemName(item.getItemName());
+        item.setPrice(item.getPrice());
+        item.setSKU(item.getSKU());
+        item.setSize(item.getSize());
 
         return item;
     }
@@ -31,20 +49,30 @@ public class ItemService {
         return mapDomainToModel(repository.save(mapModelToDomain(body)));
     }
 
-    public Item deleteItem(String id) {
-        return repository.deleteItem(id);
+    public void deleteItem(String id) {
+        repository.deleteById(id);
     }
 
-    public Item getAllItems(Item body) {
-        return repository.getAllItems(body);
+    public List<Item> getAllItems() {
+        List<ItemDomain> items = repository.findAll();
+        List<Item> changedItems = new LinkedList<>();
+
+        for (ItemDomain itemDomain : items) {
+            int x = 0;
+            Item item = mapDomainToModel(itemDomain);
+            changedItems.set(x, item);
+            x++;
+            return changedItems;
+        }
+        return changedItems;
     }
 
     public Item getItem(String id) {
-        return repository.getItem(id);
+        return mapDomainToModel(repository.findByItemId(id));
     }
 
     public Item updateItem(Item body) {
-        return repository.updateItem(body);
+        return mapDomainToModel(repository.insert(mapModelToDomain(body)));
     }
 
 }
