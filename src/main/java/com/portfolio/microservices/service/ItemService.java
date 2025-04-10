@@ -18,29 +18,29 @@ public class ItemService {
 
     private ItemDomain mapModelToDomain(Item item) {
         ItemDomain itemDomain = new ItemDomain();
-        itemDomain.setItemId(itemDomain.getItemId());
-        itemDomain.setCategory(itemDomain.getCategory());
-        itemDomain.setDescription(itemDomain.getDescription());
-        itemDomain.setImage(itemDomain.getImage());
-        itemDomain.setItemName(itemDomain.getItemName());
-        itemDomain.setPrice(itemDomain.getPrice());
-        itemDomain.setSKU(itemDomain.getSKU());
-        itemDomain.setSize(itemDomain.getSize());
+        itemDomain.setItemId(item.getItemId());
+        itemDomain.setCategory(item.getCategory());
+        itemDomain.setDescription(item.getDescription());
+        itemDomain.setImage(item.getImage());
+        itemDomain.setItemName(item.getItemName());
+        itemDomain.setPrice(item.getPrice());
+        itemDomain.setSKU(item.getSKU());
+        itemDomain.setSize(item.getSize());
 
         return itemDomain;
     }
 
     private Item mapDomainToModel(ItemDomain domain) {
         Item item = new Item();
-        item.setItemId(item.getItemId());
-        item.setItemId(item.getItemId());
-        item.setCategory(item.getCategory());
-        item.setDescription(item.getDescription());
-        item.setImage(item.getImage());
-        item.setItemName(item.getItemName());
-        item.setPrice(item.getPrice());
-        item.setSKU(item.getSKU());
-        item.setSize(item.getSize());
+        item.setItemId(domain.getItemId());
+        item.setItemId(domain.getItemId());
+        item.setCategory(domain.getCategory());
+        item.setDescription(domain.getDescription());
+        item.setImage(domain.getImage());
+        item.setItemName(domain.getItemName());
+        item.setPrice(domain.getPrice());
+        item.setSKU(domain.getSKU());
+        item.setSize(domain.getSize());
 
         return item;
     }
