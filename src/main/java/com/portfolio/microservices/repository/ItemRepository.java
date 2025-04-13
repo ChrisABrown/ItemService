@@ -14,7 +14,6 @@ public interface ItemRepository extends MongoRepository<ItemDomain, String> {
     @Query("{'itemId': ?0}")
     ItemDomain findByItemId(String itemId);
 
-    @Query
     List<ItemDomain> findAll();
 
 }

@@ -143,12 +143,8 @@ paths:
           schema:
             type: string
       responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
+        "204":
+          description: The resource was deleted successfully.
         '400':
           description: Bad request
         '404':
@@ -233,31 +229,6 @@ paths:
         - suprime_auth:
           - "write:items"
           - "read-items"
-      
-    get:
-      description: Get all Items
-      summary: Retrieve all items in the database
-      tags:
-          - "Item"
-      operationId: getAllItems
-      requestBody:
-          description: get all items from database
-          content:
-            application/json:              
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Item'
-
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Item'
-        '500':
-            description: Internal Sever Error
 
   /item/{id}:
     get:
@@ -299,6 +270,8 @@ paths:
           schema:
             type: string
       responses:
+        "204":
+          description: The resource was deleted successfully.
         '404':
           description: Not Found
       security:
@@ -320,31 +293,31 @@ paths:
             application/json:
               schema:
                 type: array
-                $ref: '#/components/schemas/Item'
+                items:
+                  $ref: '#/components/schemas/Item'
       security:
         - api_key: []
   
   /shop/order:
     post: 
       description: Place an order from the shop
-      operationId: placeOrder
+      operationId: createOrder
       summary: Places an order from the shop
       tags:
-        - "Shop"
+        - Order
       requestBody:
         description: order placed
-        required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Order/properties/cart'
+              $ref: '#/components/schemas/Cart'
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Order'
+                $ref: "#/components/schemas/Order"
         '400': 
           description: Invalid order
 
@@ -354,7 +327,7 @@ paths:
       description: search for order by order ID
       operationId: getOrderById
       tags:
-      - "Shop"
+      - Order
       parameters:
         - name: orderId
           in: path
@@ -380,7 +353,7 @@ paths:
       description: delete order by ID
       operationId: deleteOrder
       tags:
-      - "Shop"
+      - "Order"
       parameters:
         - name: orderId
           in: path
@@ -388,13 +361,26 @@ paths:
           schema:
             type: string
       responses:
+        "204":
+           description: The resource was deleted successfully.
         '400':
           description: Invalid request
         '404':
           description: Order Not Found
+          
 
 components:      
   schemas:
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+      required:
+          - code
+          - message
     Item:
      description: This is an Item model/schema
      type: object
@@ -436,16 +422,19 @@ components:
           - 'L'
           - 'XL'
           - 'XXL'
-
     User:
       description: This is the User model/schema
       type: object
       required:
         - "username"
+        - "userId"
         - "role"
         - "email"
         - "password"
       properties:
+        userId:
+          type: string
+          description: Id of the user
         username:
           type: string
           description: username of the user
@@ -463,127 +452,157 @@ components:
           uniqueItems: true
         password:
           type: string
-        profile:
+        Profile:
           type: object
           additionalProperties: 
             $ref: '#/components/schemas/Profile'
+        orders:
+          type: array
+          items:
+            $ref: '#/components/schemas/Order'
         messages:
           type: array
           items:
             $ref: '#/components/schemas/Message'
-
     Order:
-        description: This is the Order model/schema
-        type: object
-        required:
-          - 'user'
-          - 'cart'
-          - 'orderId'
-          - 'cartTotal'
-        properties:
-          User:
-            type: object
+      description: This is the Order model/schema
+      type: object
+      required:
+        - 'user'
+        - 'cart'
+        - 'orderId'
+        - 'cartTotal'
+      properties:
+        User:
+          type: object
+          additionalProperties: 
+            $ref: '#/components/schemas/User'
+        billingAddress:
+          type: object
+          additionalProperties: 
+            $ref: '#/components/schemas/StreetAddress'
+        orderId:
+          type: string
+          example: H3ll45h
+        shippingAddress:
+          type: object
+          additionalProperties: 
+            $ref: '#/components/schemas/StreetAddress'
+        Cart:
+          type: array
+          items:
             additionalProperties: 
-              $ref: '#/components/schemas/User'
-          orderId:
-            type: string
-            example: H3ll45h
-          billingAddress:
-            type: object
-            additionalProperties: 
-              $ref: '#/components/schemas/Profile'
-          shippingAddress:
-            type: object
-            properties:
-              street1: 
-                type: string
-                example: 123 Main st.
-              street2:
-                type: string
-                example: apt 12
-              city:
-                type: string
-                example: Midtown
-              state:
-                type: string
-                example: NY
-              country:
-                type: string
-                example: USA
-              zip:
-                type: string
-                format: 'zip-code'
-                example: 11203
-          cart:
-            type: array
-            items:
-              additionalProperties: 
-              quantity: 
-                type: number
-              $ref: '#/components/schemas/Item'
-          cartTotal:
-            type: number
-            format: double
-
+            quantity: 
+              type: number
+            $ref: '#/components/schemas/Item'
+        cartTotal:
+          type: number
+          format: double
+    Cart:
+      description: This is the Cart model/schema
+      type: object
+      properties:
+        items:
+          type: object
+          additionalProperties:
+            quantity: 
+              type: number
+            $ref: "#/components/schemas/Item"
+        total:
+          type: number
     Message:
-        description: This is the Message model/schema
-        type: object
-        required:
-          - 'messageType'
-          - 'messageBody'
-        properties:
-          Order:
-            type: number
-            additionalProperties: 
-              $ref: '#/components/schemas/Order'
-          User:
-            type: object
-            additionalProperties: 
-              $ref: '#/components/schemas/User'
-          messageType:
-            type: string
-            enum:
-              - 'press'
-              - 'general inquiries'
-              - 'order status inquiries'
-            default: 'order status inquiries'
-          messageBody:
-            type: string
-          
+      description: This is the Message model/schema
+      type: object
+      required:
+        - 'messageType'
+        - 'messageBody'
+      properties:
+        Order:
+          type: object
+          additionalProperties: 
+            $ref: '#/components/schemas/Order'
+        User:
+          type: object
+          additionalProperties: 
+            $ref: '#/components/schemas/User'
+        messageType:
+          type: string
+          enum:
+            - 'press'
+            - 'general inquiries'
+            - 'order status inquiries'
+          default: 'order status inquiries'
+        messageBody:
+          type: string    
     Profile:
-        description: This is the Profile model/schema
-        type: object
-        properties:
-          firstName:
+      description: This is the Profile model/schema
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        avatar:
+          type: string
+        bio:
+          type: string
+        Address:
+          type: object
+          additionalProperties: 
+            $ref: '#/components/schemas/StreetAddress'       
+    StreetAddress:
+      description: This is the Address model/schema
+      type: object
+      properties:
+        street1: 
+          type: string
+          example: 123 Main st.
+        street2:
+          type: string
+          example: apt 12
+        city:
+          type: string
+          example: Midtown
+        state:
+          type: string
+          example: NY
+        country:
+          type: string
+          example: USA
+        zip:
+          type: string
+          format: 'zip-code'
+          example: 11203
+  responses:
+    NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+    ImageResponse: # Can be referenced as '#/components/responses/ImageResponse'
+      description: An image.
+      content:
+        image/*:
+          schema:
             type: string
-          lastName:
-            type: string
-          avatar:
-            type: string
-          bio:
-            type: string
-          address:
-            type: object
-            properties:
-              street1: 
-                type: string
-                example: 123 Main st.
-              street2:
-                type: string
-                example: apt 12
-              city:
-                type: string
-                example: Midtown
-              state:
-                type: string
-                example: NY
-              country:
-                type: string
-                example: USA
-              zip:
-                type: string
-                format: 'zip-code'
-                example: 11203
+            format: binary
+
+    GenericError: # Can be referenced as '#/components/responses/GenericError'
+      description: An error occurred.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+              
 
 
-  

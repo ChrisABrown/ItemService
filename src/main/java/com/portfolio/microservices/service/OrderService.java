@@ -1,58 +1,66 @@
-package com.portfolio.microservices.service;
+// package com.portfolio.microservices.service;
 
-import java.util.Optional;
+// import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+// import org.springframework.beans.factory.annotation.Autowired;
+// import org.springframework.stereotype.Service;
 
-import com.portfolio.microservices.domain.OrderDomain;
-import com.portfolio.microservices.repository.OrderRepository;
-import com.portfolio.microservices.suprimeapi.model.Order;
+// import com.portfolio.microservices.domain.OrderDomain;
+// import com.portfolio.microservices.repository.OrderRepository;
+// import com.portfolio.microservices.repository.UserRepository;
+// import com.portfolio.microservices.suprimeapi.model.Order;
+// import com.portfolio.microservices.suprimeapi.model.User;
 
-@Service
-public class OrderService {
+// @Service
+// public class OrderService {
 
-    @Autowired
-    private OrderRepository repository;
+// @Autowired
+// private OrderRepository repository;
+// @Autowired
+// private UserRepository userRepository;
 
-    private OrderDomain mapModelToDomain(Order order) {
-        OrderDomain orderDomain = new OrderDomain();
-        orderDomain.setBillingAddress(order.getBillingAddress());
-        orderDomain.setCart(order.getCart());
-        orderDomain.setCartTotal(order.getCartTotal());
-        orderDomain.setOrderId(order.getOrderId());
-        orderDomain.setShippingAddress(order.getShippingAddress());
-        orderDomain.setUser(order.getUser());
+// private UserService service;
 
-        return orderDomain;
-    }
+// private OrderDomain mapModelToDomain(Order order) {
+// OrderDomain orderDomain = new OrderDomain();
+// // orderDomain.setBillingAddress(order.getBillingAddress());
+// // orderDomain.setCart(order.getCart());
+// // orderDomain.setCartTotal(order.getCartTotal());
+// // orderDomain.setOrderId(order.getOrderId());
+// // orderDomain.setShippingAddress(order.getShippingAddress());
+// // orderDomain.setUser(order.getUser());
 
-    private Order mapDomainToModel(OrderDomain domain) {
-        Order order = new Order();
-        order.setBillingAddress(domain.getBillingAddress());
-        order.setCart(domain.getCart());
-        order.setCartTotal(domain.getCartTotal());
-        order.setOrderId(domain.getOrderId());
-        order.setShippingAddress(domain.getShippingAddress());
-        order.setUser(domain.getUser());
+// return orderDomain;
+// }
 
-        return order;
-    }
+// private Order mapDomainToModel(OrderDomain domain) {
+// Order order = new Order();
+// // order.setBillingAddress(domain.getBillingAddress());
+// // order.setCart(domain.getCart());
+// // order.setCartTotal(domain.getCartTotal());
+// // order.setOrderId(domain.getOrderId());
+// // order.setShippingAddress(domain.getShippingAddress());
+// // order.setUser(domain.getUser());
 
-    public Order placeOrder(Order order) {
-        return mapDomainToModel(repository.save(mapModelToDomain(order)));
-    }
+// return order;
+// }
 
-    public void deleteOrder(String orderId) {
-        repository.deleteById(orderId);
-    }
+// public Order placeOrder(Order order, String userId) {
+// // User buyUser = userRepository.findById(userId).get();
 
-    public Order findOrderById(String orderId) {
-        Optional<OrderDomain> order = repository.findById(orderId);
+// return mapDomainToModel(repository.save(mapModelToDomain(order)));
+// }
 
-        Order foundOrder = mapDomainToModel(order.get());
+// public void deleteOrder(String orderId) {
+// repository.deleteById(orderId);
+// }
 
-        return foundOrder;
-    }
+// public Order findOrderById(String orderId) {
+// Optional<OrderDomain> order = repository.findById(orderId);
 
-}
+// Order foundOrder = mapDomainToModel(order.get());
+
+// return foundOrder;
+// }
+
+// }

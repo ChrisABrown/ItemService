@@ -1,6 +1,8 @@
 package com.portfolio.microservices.domain;
 
 import java.util.List;
+import java.util.Map;
+
 import javax.validation.Valid;
 
 import org.springframework.data.annotation.Id;
@@ -9,8 +11,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.portfolio.microservices.suprimeapi.model.Message;
-import com.portfolio.microservices.suprimeapi.model.Profile;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -73,11 +73,16 @@ public class UserDomain {
     @JsonProperty("password")
     private String password = null;
 
-    @JsonProperty("profile")
-    @Valid
-    private Profile profile = null;
+    // @JsonProperty("profile")
+    // @Valid
+    // private Map<String, Profile> profile = null;
 
-    @JsonProperty("messages")
-    @Valid
-    private List<Message> messages = null;
+    // @JsonProperty("messages")
+    // @Valid
+    // private List<Message> messages = null;
+
+    // @JsonProperty("orders")
+    // @Valid
+    // private List<Order> orders = null;
+
 }
