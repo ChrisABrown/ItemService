@@ -9,6 +9,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.portfolio.microservices.suprimeapi.model.Item.SizeEnum;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -35,8 +36,8 @@ public class ItemDomain {
     private String description = null;
     @JsonProperty("image")
     private String image = null;
-    // @JsonProperty("size")
-    // @Valid
-    // private List<SizeEnum> size = null;
+    @JsonProperty("size")
+    @Valid
+    private List<SizeEnum> size = null;
 
 }

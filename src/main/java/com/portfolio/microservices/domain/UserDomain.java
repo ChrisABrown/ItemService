@@ -11,6 +11,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.portfolio.microservices.suprimeapi.model.Message;
+import com.portfolio.microservices.suprimeapi.model.Order;
+import com.portfolio.microservices.suprimeapi.model.Profile;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -23,7 +26,9 @@ import lombok.ToString;
 public class UserDomain {
 
     @Id
+    @JsonProperty("userId")
     private String userId = null;
+    @JsonProperty("username")
     private String username = null;
 
     public enum RoleEnum {
@@ -73,16 +78,16 @@ public class UserDomain {
     @JsonProperty("password")
     private String password = null;
 
-    // @JsonProperty("profile")
-    // @Valid
-    // private Map<String, Profile> profile = null;
+    @JsonProperty("profile")
+    @Valid
+    private Map<String, Profile> profile = null;
 
-    // @JsonProperty("messages")
-    // @Valid
-    // private List<Message> messages = null;
+    @JsonProperty("messages")
+    @Valid
+    private List<Message> messages = null;
 
-    // @JsonProperty("orders")
-    // @Valid
-    // private List<Order> orders = null;
+    @JsonProperty("orders")
+    @Valid
+    private List<Order> orders = null;
 
 }

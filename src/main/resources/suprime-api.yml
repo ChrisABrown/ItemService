@@ -74,6 +74,7 @@ paths:
           description: OK
         '400':
           description: Invalid username/password supplied
+          $ref: "#/components/responses/Unauthorized"
 
   /user/logout:
     get:
@@ -109,9 +110,10 @@ paths:
                 $ref: '#/components/schemas/User'
         '400':
           description: Invalid username supplied
+          $ref: "#/components/responses/Unauthorized"
         '404':
-          description: User not found
-    
+          description: Resource Not Found
+          $ref: "#/components/responses/NotFound"    
     put:
       description: Can only be done by the logged in user
       operationId: updateUser
@@ -127,8 +129,10 @@ paths:
       responses:
         '400':
           description: Invalid user supplied
+          $ref: "#/components/responses/GenericError"
         '404':
           description: User not found
+          $ref: "#/components/responses/NotFound"
 
     delete:
       description: Remove User information from the database
@@ -147,8 +151,10 @@ paths:
           description: The resource was deleted successfully.
         '400':
           description: Bad request
+          $ref: "#/components/responses/GenericError"
         '404':
-          description: User not found
+          description: Resource Not Found
+          $ref: "#/components/responses/NotFound"
 
   /user/{username}/message:
     post:
@@ -170,6 +176,7 @@ paths:
           description: OK
         '400':
           description: Bad request
+          $ref: "#/components/responses/GenericError"
 
   /item:
     post:
@@ -194,6 +201,7 @@ paths:
                 $ref: '#/components/schemas/Item'
         '500':
             description: Something went wrong
+            $ref: "#/components/responses/GenericError"
       security:
         - suprime_auth:
           - "write:items"
@@ -221,10 +229,13 @@ paths:
                 $ref: '#/components/schemas/Item'
         '400':
           description: "Invalid ID supplied"
+          $ref: "#/components/responses/GenericError"
         '404':
-          description: "Item not found"
+          description: Resource Not Found
+          $ref: "#/components/responses/NotFound"
         '405':
           description: "Validation exception"
+          $ref: "#/components/responses/Unauthorized"
       security:
         - suprime_auth:
           - "write:items"
@@ -252,10 +263,13 @@ paths:
                 $ref: '#/components/schemas/Item'
         '400':
           description: Bad request
+          $ref: "#/components/responses/GenericError"
         '404':
-          description: Not Found
+          description: Resource Not Found
+          $ref: "#/components/responses/NotFound"
         '500':
           description: Internal Server Error
+          $ref: "#/components/responses/GenericError"
 
     delete:
       description: Delete a specific Item based on given itemId
@@ -273,7 +287,11 @@ paths:
         "204":
           description: The resource was deleted successfully.
         '404':
-          description: Not Found
+          description: Resource Not Found
+          $ref: "#/components/responses/NotFound"
+        "401":
+          description: Unauthorized request
+          $ref: "#/components/responses/Unauthorized"
       security:
         - suprime_auth:
           - "write:items"
@@ -310,7 +328,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Cart'
+              $ref: '#/components/schemas/Order'
       responses:
         '200':
           description: OK
@@ -320,6 +338,7 @@ paths:
                 $ref: "#/components/schemas/Order"
         '400': 
           description: Invalid order
+          $ref: "#/components/responses/GenericError"
 
   /shop/order/{orderId}:
     get:
@@ -343,10 +362,14 @@ paths:
                 $ref: '#/components/schemas/Order'
         '400':
           description: Bad request
+          $ref: "#/components/responses/GenericError"
+
         '404':
-          description: Order Not Found
+          description: Resource Not Found
+          $ref: "#/components/responses/NotFound"
         '500':
           description: Internal Server Error
+          $ref: "#/components/responses/GenericError"
     
     delete:
       summary: Delete purchase order by ID
@@ -365,8 +388,10 @@ paths:
            description: The resource was deleted successfully.
         '400':
           description: Invalid request
+          $ref: "#/components/responses/GenericError"
         '404':
-          description: Order Not Found
+          description: Resource Not Found
+          $ref: "#/components/responses/NotFound"
           
 
 components:      
