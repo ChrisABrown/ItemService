@@ -34,7 +34,7 @@ public class ItemController implements ItemApi {
     }
 
     @Override
-    public ResponseEntity<Item> updateItem(Item body) {
+    public ResponseEntity<Item> updateItem(String id, Item body) {
         Item uItem = service.updateItem(body);
 
         return ResponseEntity.ok().body(uItem);

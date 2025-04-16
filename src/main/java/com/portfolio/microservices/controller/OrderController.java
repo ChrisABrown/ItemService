@@ -10,9 +10,9 @@ import com.portfolio.microservices.service.ItemService;
 import com.portfolio.microservices.service.OrderService;
 import com.portfolio.microservices.service.UserService;
 import com.portfolio.microservices.suprimeapi.api.ShopApi;
-import com.portfolio.microservices.suprimeapi.model.Cart;
 import com.portfolio.microservices.suprimeapi.model.Item;
 import com.portfolio.microservices.suprimeapi.model.Order;
+import com.portfolio.microservices.suprimeapi.model.User;
 
 @RestController
 public class OrderController implements ShopApi {
@@ -24,11 +24,15 @@ public class OrderController implements ShopApi {
     @Autowired
     private UserService service3;
 
-    // TODO implement the user searching capability
     @Override
-    public ResponseEntity<Void> deleteOrder(String orderId) {
-        // service3.findUserById()
-        // service.deleteOrder(orderId);
+    public ResponseEntity<Void> deleteOrder(String orderId, String userId) {
+        User user1 = service3.findUserById(userId);
+        Order dOrder = service.findOrderById(orderId);
+        Order fOrder = user1.getOrders().get(user1.getOrders().indexOf(dOrder));
+        if (dOrder.equals(fOrder)) {
+            service.deleteOrder(orderId, userId);
+            return null;
+        }
         return null;
     }
 
@@ -47,9 +51,13 @@ public class OrderController implements ShopApi {
     }
 
     @Override
-    public ResponseEntity<Order> createOrder(Order body) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'createOrder'");
+    public ResponseEntity<Order> createOrder(Order body, String userId) {
+        User foundUser = service3.findUserById(userId);
+
+        foundUser.getOrders().addLast(body);
+        service.placeOrder(body, userId);
+
+        return ResponseEntity.ok().body(body);
     }
 
 }
