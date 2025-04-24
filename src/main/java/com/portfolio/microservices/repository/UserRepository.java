@@ -5,6 +5,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
 import com.portfolio.microservices.domain.UserDomain;
+import com.portfolio.microservices.suprimeapi.model.User;
 
 public interface UserRepository extends MongoRepository<UserDomain, String> {
 
@@ -13,5 +14,8 @@ public interface UserRepository extends MongoRepository<UserDomain, String> {
 
     @DeleteQuery("{'userId': ?0}")
     void deleteProfileByUserId(String userId);
+
+    @Query("{ 'email': ?0 }")
+    User findByEmail(String email);
 
 }

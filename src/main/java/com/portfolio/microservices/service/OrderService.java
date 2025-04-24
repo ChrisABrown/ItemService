@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import com.portfolio.microservices.domain.OrderDomain;
 import com.portfolio.microservices.domain.UserDomain;
-import com.portfolio.microservices.repository.ItemRepository;
 import com.portfolio.microservices.repository.OrderRepository;
 import com.portfolio.microservices.repository.UserRepository;
 import com.portfolio.microservices.suprimeapi.model.Order;
@@ -19,8 +18,6 @@ public class OrderService {
     private OrderRepository repository;
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private ItemRepository itemRepository;
 
     private OrderDomain mapModelToDomain(Order order) {
         OrderDomain orderDomain = new OrderDomain();

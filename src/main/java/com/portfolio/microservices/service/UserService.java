@@ -42,12 +42,6 @@ public class UserService {
         return domain;
     }
 
-    public User createUser(User bodyUser) {
-
-        return mapDomainToModel(repository.save(mapModelToDomain(bodyUser)));
-
-    }
-
     public User updateUser(User originUser) {
         UserDomain originUserDomain = mapModelToDomain(originUser);
         UserDomain foundUserDomain = repository.findById(originUserDomain.getUserId()).get();
@@ -66,6 +60,20 @@ public class UserService {
         return mapDomainToModel(repository.insert(originUserDomain));
     }
 
+    public User createUser(User bodyUser) {
+        User newUser = new User();
+        newUser.setEmail(bodyUser.getEmail());
+        newUser.setMessages(bodyUser.getMessages());
+        newUser.setOrders(bodyUser.getOrders());
+        newUser.setPassword(bodyUser.getPassword());
+        newUser.setProfile(bodyUser.getProfile());
+        newUser.setRole(bodyUser.getRole());
+        newUser.setUserId(bodyUser.getUserId());
+        newUser.setRole(bodyUser.getRole());
+        return mapDomainToModel(repository.save(mapModelToDomain(bodyUser)));
+
+    }
+
     public void deleteUser(String userId) {
         UserDomain foundUserDomain = repository.findById(userId).get();
 
@@ -74,7 +82,6 @@ public class UserService {
 
     public Message createMessage(Message body, String userId) {
         User foundUser = mapDomainToModel(repository.findById(userId).get());
-
         foundUser.addMessagesItem(body);
         return foundUser.getMessages().getLast();
     }

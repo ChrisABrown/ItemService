@@ -1,10 +1,13 @@
 package com.portfolio.microservices.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.portfolio.microservices.service.UserService;
 import com.portfolio.microservices.suprimeapi.api.UserApi;
 import com.portfolio.microservices.suprimeapi.model.Message;
 import com.portfolio.microservices.suprimeapi.model.User;
@@ -12,22 +15,13 @@ import com.portfolio.microservices.suprimeapi.model.User;
 @RestController
 public class UserController implements UserApi {
 
-    @Override
-    public ResponseEntity<Void> createMessage(String username, List<Message> body) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'createMessage'");
-    }
+    @Autowired
+    UserService service;
 
     @Override
-    public ResponseEntity<Void> createUser(User body) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'createUser'");
-    }
-
-    @Override
-    public ResponseEntity<Void> createUsersWithArrayInput(List<User> body) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'createUsersWithArrayInput'");
+    public ResponseEntity<Void> createMessage(String userId, List<Message> body) {
+        service.createMessage(body.getLast(), userId);
+        return null;
     }
 
     @Override
@@ -43,21 +37,26 @@ public class UserController implements UserApi {
     }
 
     @Override
-    public ResponseEntity<Void> loginUser(String username, String password) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'loginUser'");
+    public ResponseEntity<Void> updateUser(String userId) {
+        User fUser = service.findUserById(userId);
+        service.updateUser(fUser);
+        return null;
     }
 
     @Override
-    public ResponseEntity<Void> logoutUser() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'logoutUser'");
+    public ResponseEntity<User> createUser(User body) {
+        User response = service.createUser(body);
+        return ResponseEntity.ok().body(response);
     }
 
     @Override
-    public ResponseEntity<Void> updateUser(String username) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateUser'");
+    public ResponseEntity<List<User>> createUsersWithArrayInput(List<User> body) {
+        List<User> newUsers = new ArrayList<>();
+        for (User user : body) {
+            service.createUser(user);
+            newUsers.add(user);
+        }
+        return ResponseEntity.ok().body(newUsers);
     }
 
 }

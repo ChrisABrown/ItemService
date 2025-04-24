@@ -9,7 +9,10 @@ info:
     url: www.example.com
    
 servers:
-  - url: http://localhost:8080
+  - url: https://yourdomain.com/api
+    description: Production server (HTTPS)
+  - url: http://localhost:8080/api
+    description: Local development server (HTTP)
  
 tags:
   - name: Suprime API
@@ -23,14 +26,19 @@ paths:
       tags:
         - Users
       requestBody:
-        description: create item in database
+        description: create user in database
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/User'
       responses:
-        default:
-          description: "successful operation"
+        "201":
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        
   
   /user/createWithArray:
     post:
@@ -47,56 +55,63 @@ paths:
               items:
                 $ref: '#/components/schemas/User'
       responses:
-        default:
-          description: "successful operation"
-
-  /user/login:
-    get:
-      summary: Logs user into the system
+        "201":
+          description: List of Users created successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        
+  /auth/login:
+    post:
+      description: Authenticates a user and grants them access
+      summary: Login user
       operationId: loginUser
       tags:
-      - Users
-      parameters:
-        - name: username
-          in: query
-          description: the user name for login
-          required: true
-          schema:
-            type: string
-        - name: password
-          in: query
-          description: password for login in clear text
-          required: true
-          schema:
-            type: string
+        - Users
+      requestBody:
+        description: Login credentials
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
       responses:
         '200':
-          description: OK
-        '400':
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '401':
           description: Invalid username/password supplied
           $ref: "#/components/responses/Unauthorized"
-
-  /user/logout:
-    get:
-      description: ""
-      summary: Logs out current logged in user session
+      
+  /auth/logout:
+    post:
+      summary: "Logout user"
+      description: "Invalidates the user's session and removes their access."
       operationId: logoutUser
-      tags:
-      - Users
-      parameters: []
       responses:
-        default:
-          description: OK
-
-  /user/{username}:
+        "200":
+          description: "Successful logout"
+        "401":
+          description: "Unauthorized - User not logged in"
+          $ref: "#/components/responses/Unauthorized"
+      security:
+        - suprime_auth: []
+      
+  /user/{userId}:
     get:
       description: Retrieves the user's profile and displays their homepage
       operationId: getUser
-      summary: Retrieves a user by username
+      summary: Retrieves a user by userId
       tags: 
         - Users
       parameters:
-        - name: username
+        - name: userId
           in: path
           required: true
           schema:
@@ -114,6 +129,7 @@ paths:
         '404':
           description: Resource Not Found
           $ref: "#/components/responses/NotFound"    
+          
     put:
       description: Can only be done by the logged in user
       operationId: updateUser
@@ -121,7 +137,7 @@ paths:
       tags:
       - Users
       parameters:
-        - name: username
+        - name: userId
           in: path
           required: true
           schema:
@@ -141,7 +157,7 @@ paths:
       tags:
         - Users
       parameters:
-        - name: username
+        - name: userId
           in: path
           required: true
           schema:
@@ -199,8 +215,8 @@ paths:
               $ref: '#/components/schemas/Item'
  
       responses:
-        '200':
-          description: OK
+        '201':
+          description: Item created successfully
           content:
             application/json:
               schema:
@@ -418,7 +434,8 @@ components:
   securitySchemes:
     suprime_auth: 
       type: http
-      scheme: basic
+      scheme: bearer
+      bearerFormat: JWT
   schemas:
     Error:
       type: object
@@ -430,6 +447,38 @@ components:
       required:
           - code
           - message
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+    LoginResponse:
+      description: This is the LoginResponse model/schema
+      type: object
+      required:
+        - userId
+        - username
+        - email
+        - role
+        - token
+      properties:
+        userId:
+          type: string
+        username:
+          type: string
+        email:
+          type: string
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+        token:
+          type: string
     Item:
      description: This is an Item model/schema
      type: object
@@ -471,6 +520,10 @@ components:
           - 'L'
           - 'XL'
           - 'XXL'
+    RoleEnum:
+      description: This is the RoleEnum model/schema
+      type: string
+      enum: [user, employee, admin]
     User:
       description: This is the User model/schema
       type: object
@@ -487,14 +540,9 @@ components:
         username:
           type: string
           description: username of the user
-          example: "user123"
-          minLength: 3
         role:
           type: string
-          enum:
-            - 'user'
-            - 'employee'
-            - 'admin'
+          $ref: "#/components/schemas/RoleEnum"
           default: 'user'
         email:
           type: string
@@ -622,6 +670,7 @@ components:
           type: string
           format: 'zip-code'
           example: 11203
+
   responses:
     NotFound:
       description: The specified resource was not found

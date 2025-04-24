@@ -15,7 +15,7 @@ import com.portfolio.microservices.suprimeapi.model.Order;
 import com.portfolio.microservices.suprimeapi.model.User;
 
 @RestController
-public class OrderController implements ShopApi {
+public class OrderController implements ShopApi{
 
     @Autowired
     private OrderService service;
@@ -51,7 +51,7 @@ public class OrderController implements ShopApi {
     }
 
     @Override
-    public ResponseEntity<Order> createOrder(Order body, String userId) {
+    public ResponseEntity<Order> createOrder(String userId, Order body) {
         User foundUser = service3.findUserById(userId);
 
         foundUser.getOrders().addLast(body);
