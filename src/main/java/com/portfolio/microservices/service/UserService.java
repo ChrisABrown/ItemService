@@ -46,7 +46,7 @@ public class UserService {
         UserDomain originUserDomain = mapModelToDomain(originUser);
         UserDomain foundUserDomain = repository.findById(originUserDomain.getUserId()).get();
 
-        if (originUserDomain.getUserId() == foundUserDomain.getUserId()) {
+        if (originUserDomain.getUserId() == null ? foundUserDomain.getUserId() == null : originUserDomain.getUserId().equals(foundUserDomain.getUserId())) {
             originUserDomain.setEmail(originUser.getEmail());
             originUserDomain.setMessages(originUser.getMessages());
             originUserDomain.setPassword(originUser.getPassword());

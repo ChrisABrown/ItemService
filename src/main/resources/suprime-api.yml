@@ -172,7 +172,7 @@ paths:
           description: Resource Not Found
           $ref: "#/components/responses/NotFound"
 
-  /user/{username}/message:
+  /user/{userID}/message:
     post:
       description: Posts message from user to team
       operationId: createMessage
@@ -180,7 +180,7 @@ paths:
       tags:
         - Users
       parameters:
-        - name: username
+        - name: userId
           in: path
           required: true
           schema:
