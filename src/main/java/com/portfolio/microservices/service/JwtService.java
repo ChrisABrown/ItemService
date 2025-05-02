@@ -22,12 +22,16 @@ public class JwtService {
     // Token expiration (e.g., 10 hours)
     private static final long EXPIRATION_TIME = 1000 * 60 * 60 * 10; // 10 hours
 
+    // Claim Strings
+    private static final String USER_ID = "userId";
+    private static final String ROLE = "role";
+
     // Generate JWT token
     public String generateToken(User user) {
         return Jwts.builder()
                 .subject(user.getEmail())
-                .claim("role", user.getRole().toString())
-                .claim("userId", user.getUserId())
+                .claim(ROLE, user.getRole().toString())
+                .claim(USER_ID, user.getUserId())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(SECRET_KEY)
@@ -58,12 +62,12 @@ public class JwtService {
 
     // Extract user ID from JWT token
     public String extractUserId(String token) {
-        return extractClaim(token, claims -> claims.get("userId", String.class));
+        return extractClaim(token, claims -> claims.get(USER_ID, String.class));
     }
 
     // Extract role from JWT token
     public RoleEnum extractRole(String token) {
-    return extractClaim(token, claims -> RoleEnum.fromValue(claims.get("role",
+    return extractClaim(token, claims -> RoleEnum.fromValue(claims.get(ROLE,
     String.class)));
     }
 

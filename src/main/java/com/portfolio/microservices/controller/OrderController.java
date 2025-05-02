@@ -64,7 +64,7 @@ public class OrderController implements ShopApi{
     public ResponseEntity<Order> createOrder(@PathVariable String userId, Order body) {
         User foundUser = service3.findUserById(userId);
 
-        foundUser.getOrders().addLast(body);
+        // foundUser.getOrders().addLast(body);
         service.placeOrder(body, userId);
 
         return ResponseEntity.ok().body(body);

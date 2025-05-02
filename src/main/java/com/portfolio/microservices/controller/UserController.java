@@ -28,13 +28,43 @@ public class UserController implements UserApi {
     @Override
     @PostMapping("/{userId}/message")
     public ResponseEntity<Void> createMessage(@PathVariable String userId, List<Message> body) {
-        service.createMessage(body.getLast(), userId);
-        return null;
+        // Transform the body to an array
+        // to get the first element
+        // and cast it to a Message object
+        // This is a workaround for the fact that
+        // the body is a list of messages
+        // and we only want the first one
+        // to create a message
+        Object[] messageArr = body.toArray();
+        Message message = (Message) messageArr[0];
+        // Check if the message is null or empty
+        try {
+            if (body.size() < 1) {
+                return ResponseEntity.badRequest().build();
+            }
+            if (userId == null || userId.isEmpty()) {
+                return ResponseEntity.badRequest().build();
+            }
+            service.createMessage(message, userId);
+        // Check if the user exists
+        User foundUser = service.findUserById(userId);
+        if (foundUser == null) {
+            return ResponseEntity.notFound().build();
+        }
+        // Add the message to the user's messages
+        foundUser.getMessages().add(message);
+        // Update the user with the new message
+        service.updateUser(foundUser).addMessagesItem(message);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @Override
     @DeleteMapping("/{userId}")
     public ResponseEntity<Void> deleteUser(@PathVariable String userId) {
+         // Check if the user exists
        service.deleteUser(userId);
        return null;
     }

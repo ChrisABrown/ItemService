@@ -18,6 +18,18 @@ tags:
   - name: Suprime API
 
 paths:
+  /error:
+    get:
+      description: Returns in case of an Error
+      operationId: showError
+      summary: fallback for an error
+      tags:
+        - Error
+      responses:
+        "400":
+          description: Something went wrong
+          $ref: "#/components/responses/GenericError"
+
   /user:
     post:
       description: Creates a User and fills out their user profile
@@ -39,7 +51,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/User'
         
-  
   /user/createWithArray:
     post:
       summary: Creates list of users with given input array
