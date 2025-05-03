@@ -1,6 +1,5 @@
 package com.portfolio.microservices.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Component;
 
@@ -11,12 +10,9 @@ import com.portfolio.microservices.suprimeapi.model.User;
 @Component
 public class AuthService {
 
-    @Autowired
-    private UserRepository repo;
-    @Autowired
-    private JwtService jwtService;
-    @Autowired
-    private TokenBlacklistService tokenBlacklistService;
+    private final UserRepository repo;
+    private final JwtService jwtService;
+    private final TokenBlacklistService tokenBlacklistService;
     private final String USER_NOT_FOUND = "User not found";
     private final String INVALID_CREDENTIALS = "Invalid credentials";
     private final String EMAIL_REQUIRED = "Email is required";
@@ -35,10 +31,16 @@ public class AuthService {
     private final String PASSWORD_REGEX = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,}$";
     private final String LOGIN_FAILURE = "Login failed: ";
 
+    public AuthService(UserRepository userRepository, JwtService jwtService1,
+            TokenBlacklistService tokenBlacklistService1) {
+        this.repo = userRepository;
+        this.jwtService = jwtService1;
+        this.tokenBlacklistService = tokenBlacklistService1;
+    }
 
     public LoginResponse login(String email, String password) {
         User user = repo.findByEmail(email);
-        
+
         try {
             if (user == null) {
                 throw new RuntimeException(USER_NOT_FOUND);
@@ -85,7 +87,7 @@ public class AuthService {
         } catch (RuntimeException e) {
             throw new RuntimeException(LOGIN_FAILURE + e.getMessage());
         }
-        
+
         String token = jwtService.generateToken(user);
 
         return new LoginResponse()

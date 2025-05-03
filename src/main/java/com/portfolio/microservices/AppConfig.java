@@ -1,27 +1,26 @@
 package com.portfolio.microservices;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.portfolio.microservices.repository.ItemRepository;
 import com.portfolio.microservices.repository.OrderRepository;
 import com.portfolio.microservices.repository.UserRepository;
+import com.portfolio.microservices.service.AuthService;
 import com.portfolio.microservices.service.ItemService;
+import com.portfolio.microservices.service.JwtService;
 import com.portfolio.microservices.service.OrderService;
+import com.portfolio.microservices.service.TokenBlacklistService;
 import com.portfolio.microservices.service.UserService;
 
 @Configuration
 public class AppConfig {
     // Define your beans here
 
-    @Autowired
     private ItemRepository itemRepository;
 
-    @Autowired
     private UserRepository userRepository;
 
-    @Autowired
     private OrderRepository orderRepository;
 
     @Bean
@@ -37,5 +36,20 @@ public class AppConfig {
     @Bean
     public OrderService orderService() {
         return new OrderService(orderRepository, userRepository);
+    }
+
+    @Bean
+    public JwtService jwtService() {
+        return new JwtService();
+    }
+
+    @Bean
+    public TokenBlacklistService tokenBlacklistService() {
+        return new TokenBlacklistService();
+    }
+
+    @Bean
+    public AuthService authService() {
+        return new AuthService(userRepository, jwtService(), tokenBlacklistService());
     }
 }

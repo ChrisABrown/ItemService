@@ -9,8 +9,6 @@ info:
     url: www.example.com
    
 servers:
-  - url: https://yourdomain.com/api
-    description: Production server (HTTPS)
   - url: http://localhost:8080/api
     description: Local development server (HTTP)
  

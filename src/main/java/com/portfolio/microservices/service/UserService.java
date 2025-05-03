@@ -1,6 +1,5 @@
 package com.portfolio.microservices.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.portfolio.microservices.domain.UserDomain;
@@ -12,7 +11,6 @@ import com.portfolio.microservices.suprimeapi.model.User;
 @Service
 public class UserService {
 
-    @Autowired
     private final UserRepository repository;
     private final String PROFILE = "Main";
     private final String USER_NOT_FOUND = "User not found with id: ";

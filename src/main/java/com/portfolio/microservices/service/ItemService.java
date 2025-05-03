@@ -3,7 +3,6 @@ package com.portfolio.microservices.service;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.portfolio.microservices.domain.ItemDomain;
@@ -13,7 +12,6 @@ import com.portfolio.microservices.suprimeapi.model.Item;
 @Service
 public class ItemService {
 
-    @Autowired
     private final ItemRepository repo;
     private final String ITEM_NOT_FOUND = "Item not found with id: ";
     private final String MODEL_ERROR_MESSAGE = "Error in in mapping model to domain: ";

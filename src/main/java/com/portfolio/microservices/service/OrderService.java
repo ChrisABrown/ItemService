@@ -4,7 +4,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.portfolio.microservices.domain.OrderDomain;
@@ -16,9 +15,7 @@ import com.portfolio.microservices.suprimeapi.model.Order;
 @Service
 public class OrderService {
 
-    @Autowired
     private final OrderRepository repo;
-    @Autowired
     private final UserRepository userRepo;
     private static final String ORDER_NOT_FOUND = "Order not found";
     private static final String USER_NOT_FOUND = "User not found";
