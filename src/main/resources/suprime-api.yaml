@@ -1,0 +1,191 @@
+openapi: '3.1.0'
+info:
+  title: Suprime API
+  version: '1.0'
+  contact:
+    name: Suprime
+    email: brownachris@yahoo.com
+    url: www.example.com
+
+servers:
+  - url: http://localhost:8081
+    description: Local development server (HTTP)
+
+tags:
+  - name: Suprime API
+
+paths:
+
+  /item:
+    post:
+      description: Create Item
+      summary: Add item to inventory
+      tags:
+        - "Item"
+      operationId: createItem
+      requestBody:
+        description: create item in database
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Item'
+
+      responses:
+        '201':
+          description: Item created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+        '500':
+            description: Something went wrong
+      
+
+  /item/{id}:
+    get:
+      description: Get a specific Item based on given itemId
+      operationId: getItem
+      summary: Fetch Item details for given id
+      tags:
+        - "Item"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Id of the item
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+        '400':
+          description: Bad request
+        '404':
+          description: Resource Not Found
+        '500':
+          description: Internal Server Error
+
+    put:
+      description: Update Item
+      summary: Update an existing Item
+      tags:
+        - "Item"
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: Id of the item to be updated
+      operationId: updateItem
+      requestBody:
+        description: update item in database
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Item'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+        '400':
+          description: "Invalid ID supplied"
+        '404':
+          description: Resource Not Found
+        '405':
+          description: "Validation exception"
+  
+
+    delete:
+      description: Delete a specific Item based on given itemId
+      operationId: deleteItem
+      summary: Delete Item with given id
+      tags: 
+      - "Item"
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Id of the item to be deleted
+        schema:
+          type: string
+      responses:
+        "204":
+          description: The resource was deleted successfully.
+        '404':
+          description: Resource Not Found
+        "401":
+          description: Unauthorized request
+
+components: 
+  schemas:
+    
+    Item:
+      description: This is an Item model/schema
+      type: object
+      required:
+        - "itemId"
+      properties:
+        itemId:
+          type: object
+          format: uuid
+          example: 12345
+          description: Id of the item
+          minLength: 5
+          maxLength: 8
+        itemName:
+          type: string
+          format: string
+          example: Long sleeve top
+          description: Name of the item
+        category:
+          type: string
+          format: string
+          description: Category of the item
+          example: Shirts
+        SKU:
+          type: string
+          format: string
+          description: Stock Keeping Unit of the item
+          example: J39HR7
+        price:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1000.00
+          example: 4.99
+        description:
+          type: string
+          format: string
+          description: Description of the item
+          example: All cotton jersey crewneck with embroidered logo on chest
+        image:
+          type: string
+          format: string
+          description: URL of the image
+          example: https://example.com/image.jpg
+        color:
+          type: array
+          items:
+            type: string
+        size:
+          type: array
+          items:
+            type: string
+        stock:
+          type: integer
+          format: int32
+          description: Number of items in stock
+          example: 100
+      
+
+                
+
+

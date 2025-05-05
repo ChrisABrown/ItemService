@@ -3,6 +3,7 @@ package com.portfolio.microservices.service;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.portfolio.microservices.domain.ItemDomain;
@@ -12,6 +13,7 @@ import com.portfolio.microservices.suprimeapi.model.Item;
 @Service
 public class ItemService {
 
+    @Autowired
     private final ItemRepository repo;
     private final String ITEM_NOT_FOUND = "Item not found with id: ";
     private final String MODEL_ERROR_MESSAGE = "Error in in mapping model to domain: ";
@@ -119,12 +121,11 @@ public class ItemService {
         }
         // If the item is found, return the populated item
         return item;
-
     }
 
     public Item createItem(Item body) {
         // Check if the item already exists
-        ItemDomain existingItem = repo.findByItemId(body.getItemId());
+        ItemDomain existingItem = repo.findByItemId(body.getItemId().toString());
         if (existingItem != null) {
             // If the item already exists, return the existing item
             return mapDomainToModel(existingItem);
@@ -213,7 +214,7 @@ public class ItemService {
 
     public Item updateItem(Item body) {
         // Check if the item exists before attempting to update it
-        ItemDomain existingItem = repo.findByItemId(body.getItemId());
+        ItemDomain existingItem = repo.findByItemId(body.getItemId().toString());
         if (existingItem == null) {
             // If the item does not exist, throw an exception or handle it accordingly
             throw new RuntimeException(ITEM_NOT_FOUND + body.getItemId());
@@ -235,5 +236,4 @@ public class ItemService {
         }
         return mapDomainToModel(repo.insert(existingItem));
     }
-
 }
