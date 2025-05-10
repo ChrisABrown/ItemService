@@ -2,6 +2,7 @@ package com.portfolio.microservices.service;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -92,7 +93,11 @@ public class ItemService {
             item.setPrice(domain.getPrice());
             item.setSKU(domain.getSKU());
             item.setSize(domain.getSize());
+            return item;
         } catch (RuntimeException e) {
+            if (domain == null) {
+                throw new RuntimeException("ItemDomain cannot be null");
+            }
             if (domain.getItemId() == null) {
                 throw new RuntimeException(ITEM_ID);
             }
@@ -124,31 +129,44 @@ public class ItemService {
     }
 
     public Item createItem(Item body) {
+
         // Check if the item already exists
-        ItemDomain existingItem = repo.findByItemId(body.getItemId().toString());
+        ItemDomain existingItem = repo.findByItemId(body.getItemId());
         if (existingItem != null) {
             // If the item already exists, return the existing item
             return mapDomainToModel(existingItem);
         }
         // If the item does not exist, create a new one
         // Use try-catch to handle any potential exceptions during saving
+        // and to ensure that the method returns null if an error occurs
+
+        ItemDomain itemDomain = new ItemDomain();
         try {
-            body.setItemId(body.getItemId());
-            body.setCategory(body.getCategory());
-            body.setDescription(body.getDescription());
-            body.setImage(body.getImage());
-            body.setItemName(body.getItemName());
-            body.setPrice(body.getPrice());
-            body.setSKU(body.getSKU());
-            body.setSize(body.getSize());
-        } catch (Exception e) {
+            itemDomain.setItemId(body.getItemId());
+            itemDomain.setCategory(body.getCategory());
+            itemDomain.setDescription(body.getDescription());
+            itemDomain.setImage(body.getImage());
+            itemDomain.setItemName(body.getItemName());
+            itemDomain.setPrice(body.getPrice());
+            itemDomain.setSKU(body.getSKU());
+            itemDomain.setSize(body.getSize());
+            ItemDomain savedItem = itemDomain;
+            // Save the new item to the repository
+            repo.insert(savedItem);
+            // Print the item ID for debugging purposes
+            // This line is for debugging purposes
+            // It can be removed or replaced with a logger in production code
+            System.out.println("Item ID: " + savedItem.getItemId());
+            // Save the new item to the repository    
+            return mapDomainToModel(savedItem);
+        } catch (RuntimeException e) {
             System.out.println(MODEL_ERROR_MESSAGE + e.getMessage());
+            // If an error occurs, return null
+            return null;
         }
-        // Save the new item to the repository
-        return mapDomainToModel(repo.save(mapModelToDomain(body)));
     }
 
-    public void deleteItem(String id) {
+    public void deleteItem(UUID id) {
         // Check if the item exists before attempting to delete
         ItemDomain existingItem = repo.findByItemId(id);
         if (existingItem == null) {
@@ -171,10 +189,6 @@ public class ItemService {
     public List<Item> getAllItems() {
         List<ItemDomain> items = repo.findAll();
         List<Item> changedItems = new LinkedList<>();
-        // If the list is null, return an empty list
-        if (items == null) {
-            return new LinkedList<>();
-        }
         // Use try-catch to handle any potential exceptions during mapping
         // and to ensure that the method returns an empty list if an error occurs
         try {
@@ -193,7 +207,7 @@ public class ItemService {
         return changedItems;
     }
 
-    public Item getItem(String id) {
+    public Item getItem(UUID id) {
         // Check if the item exists before attempting to retrieve it
         ItemDomain existingItem = repo.findByItemId(id);
         if (existingItem == null) {
@@ -212,18 +226,18 @@ public class ItemService {
         return null;
     }
 
-    public Item updateItem(Item body) {
+    public Item updateItem(UUID id, Item body) {
         // Check if the item exists before attempting to update it
-        ItemDomain existingItem = repo.findByItemId(body.getItemId().toString());
+        ItemDomain existingItem = repo.findByItemId(id);
         if (existingItem == null) {
             // If the item does not exist, throw an exception or handle it accordingly
-            throw new RuntimeException(ITEM_NOT_FOUND + body.getItemId());
+            throw new RuntimeException(ITEM_NOT_FOUND + id);
         }
         // If the item exists, update it
         // Use try-catch to handle any potential exceptions during updating
         // and to ensure that the method returns null if an error occurs
         try {
-            existingItem.setItemId(body.getItemId());
+            existingItem.setItemId(id);
             existingItem.setCategory(body.getCategory());
             existingItem.setDescription(body.getDescription());
             existingItem.setImage(body.getImage());

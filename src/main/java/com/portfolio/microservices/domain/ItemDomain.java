@@ -16,20 +16,25 @@ public class ItemDomain extends Item {
 
     // @Id
     // @JsonProperty("itemId")
-    // private String itemId = null;
+    // private String itemId;
     // @JsonProperty("itemName")
-    // private String itemName = null;
+    // private String itemName;
     // @JsonProperty("category")
-    // private String category = null;
+    // private String category;
     // @JsonProperty("SKU")
-    // private String SKU = null;
+    // private String SKU;
     // @JsonProperty("price")
-    // private BigDecimal price = null;
+    // private Double price;
     // @JsonProperty("description")
-    // private String description = null;
+    // private String description;
     // @JsonProperty("image")
-    // private String image = null;
+    // private String image;
     // @JsonProperty("size")
     // @Valid
-    // private Object size = null;
+    // private List<String> size;
+    // @JsonProperty("color")
+    // @Valid
+    // private List<String> color;
+    // @JsonProperty("stock")
+    // private Integer stock;
 }
