@@ -1,9 +1,16 @@
 package com.portfolio.microservices.controller;
 
-import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.portfolio.microservices.service.ItemService;
@@ -11,40 +18,43 @@ import com.portfolio.microservices.suprimeapi.api.ItemApi;
 import com.portfolio.microservices.suprimeapi.model.Item;
 
 @RestController
+@RequestMapping("/api/item")
 public class ItemController implements ItemApi {
+    // This class implements the ItemApi interface and provides the implementation for the methods defined in the interface.
+    // It uses the ItemService to perform the actual operations.
+    // The @RestController annotation indicates that this class is a REST controller, and the @RequestMapping annotation specifies the base URL for all the endpoints in this controller.
+    // The @Autowired annotation is used to inject the ItemService bean into this controller.
+    // The ItemApi interface defines the contract for the ItemController, and the ItemService is responsible for the business logic related to items.
+    // The ItemController class is responsible for handling HTTP requests related to items.
+
     @Autowired
     private ItemService service;
 
     @Override
-    public ResponseEntity<Item> createItem(Item body) {
+    @PostMapping("/")
+    public ResponseEntity<Item> createItem(@RequestBody Item body) {
         Item response = service.createItem(body);
-
         return ResponseEntity.ok().body(response);
     }
 
     @Override
-    public void deleteItem(String id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteItem(@PathVariable UUID id) {
         service.deleteItem(id);
+        return null;
     }
 
     @Override
-    public ResponseEntity<List<Item>> getAllItems(List<Item> items) {
-        items = service.getAllItems();
-
-        return ResponseEntity.ok().body(items);
-    }
-
-    @Override
-    public ResponseEntity<Item> getItem(String id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<Item> getItem(@PathVariable UUID id) {
         Item gItem = service.getItem(id);
-
         return ResponseEntity.ok().body(gItem);
     }
 
     @Override
-    public ResponseEntity<Item> updateItem(Item body) {
-        Item uItem = service.updateItem(body);
-
+    @PutMapping("/{id}")
+    public ResponseEntity<Item> updateItem(@PathVariable UUID id, Item body) {
+        Item uItem = service.updateItem(id, body);
         return ResponseEntity.ok().body(uItem);
     }
 
