@@ -1,4 +1,4 @@
-package com.portfolio.microservices.service;
+package com.portfolio.itemservice.service;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -7,9 +7,9 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.portfolio.microservices.domain.ItemDomain;
-import com.portfolio.microservices.repository.ItemRepository;
-import com.portfolio.microservices.suprimeapi.model.Item;
+import com.portfolio.itemservice.domain.ItemDomain;
+import com.portfolio.itemservice.repository.ItemRepository;
+import com.portfolio.itemservice.suprimeapi.model.Item;
 
 @Service
 public class ItemService {
@@ -129,7 +129,6 @@ public class ItemService {
     }
 
     public Item createItem(Item body) {
-
         // Check if the item already exists
         ItemDomain existingItem = repo.findByItemId(body.getItemId());
         if (existingItem != null) {
@@ -139,7 +138,6 @@ public class ItemService {
         // If the item does not exist, create a new one
         // Use try-catch to handle any potential exceptions during saving
         // and to ensure that the method returns null if an error occurs
-
         ItemDomain itemDomain = new ItemDomain();
         try {
             itemDomain.setItemId(body.getItemId());

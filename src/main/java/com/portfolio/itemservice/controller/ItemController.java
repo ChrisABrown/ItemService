@@ -1,4 +1,4 @@
-package com.portfolio.microservices.controller;
+package com.portfolio.itemservice.controller;
 
 import java.util.UUID;
 
@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.portfolio.microservices.service.ItemService;
-import com.portfolio.microservices.suprimeapi.api.ItemApi;
-import com.portfolio.microservices.suprimeapi.model.Item;
+import com.portfolio.itemservice.service.ItemService;
+import com.portfolio.itemservice.suprimeapi.api.ItemApi;
+import com.portfolio.itemservice.suprimeapi.model.Item;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/item")
@@ -53,9 +55,8 @@ public class ItemController implements ItemApi {
 
     @Override
     @PutMapping("/{id}")
-    public ResponseEntity<Item> updateItem(@PathVariable UUID id, Item body) {
+    public ResponseEntity<Item> updateItem(@PathVariable UUID id, @Valid Item body) {
         Item uItem = service.updateItem(id, body);
         return ResponseEntity.ok().body(uItem);
     }
-
 }

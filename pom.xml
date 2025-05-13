@@ -11,10 +11,10 @@
     <!-- lookup parent from repository -->
   </parent>
   <groupId>com.portfolio</groupId>
-  <artifactId>microservices</artifactId>
-  <version>0.0.2</version>
-  <name>microservices-app</name>
-  <description>Demo project for Spring Boot</description>
+  <artifactId>itemService</artifactId>
+  <version>1.0.0</version>
+  <name>itemservice</name>
+  <description>Item microservice for Microservices project</description>
   <properties>
     <java.version>21</java.version>
   </properties>
@@ -130,8 +130,8 @@
               <language>spring</language>
               <output>${project.build.directory}/generated-sources/</output>
               <generateSupportingFiles>false</generateSupportingFiles>
-              <modelPackage>com.portfolio.microservices.suprimeapi.model</modelPackage>
-              <apiPackage>com.portfolio.microservices.suprimeapi.api</apiPackage>
+              <modelPackage>com.portfolio.itemservice.suprimeapi.model</modelPackage>
+              <apiPackage>com.portfolio.itemservice.suprimeapi.api</apiPackage>
               <configOptions>
                 <interfaceOnly>true</interfaceOnly>
                 <useSpringAnnotations>true</useSpringAnnotations>

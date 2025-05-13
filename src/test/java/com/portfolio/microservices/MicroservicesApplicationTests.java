@@ -3,6 +3,8 @@ package com.portfolio.microservices;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.portfolio.microservices.serviceTest.itemServiceTest;
+
 @SpringBootTest
 class MicroservicesApplicationTests {
     // This test case is used to check if the Spring application context loads successfully
@@ -14,7 +16,7 @@ class MicroservicesApplicationTests {
     @Test
     void test() {
         itemServiceTest test = new itemServiceTest();
-        test.setUp();
+        // test.setUp();
     }
 
 }

@@ -1,4 +1,4 @@
-package com.portfolio.microservices.controller;
+package com.portfolio.itemservice.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

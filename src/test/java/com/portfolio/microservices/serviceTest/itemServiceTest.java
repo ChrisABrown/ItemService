@@ -1,4 +1,7 @@
-package com.portfolio.microservices;
+package com.portfolio.microservices.serviceTest;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -6,25 +9,20 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 
-import com.portfolio.microservices.domain.ItemDomain;
-import com.portfolio.microservices.repository.ItemRepository;
-import com.portfolio.microservices.service.ItemService;
-import com.portfolio.microservices.suprimeapi.model.Item;
+import com.portfolio.itemservice.domain.ItemDomain;
+import com.portfolio.itemservice.repository.ItemRepository;
+import com.portfolio.itemservice.service.ItemService;
+import com.portfolio.itemservice.suprimeapi.model.Item;
+
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 
 public class itemServiceTest {
 
@@ -65,7 +63,6 @@ public class itemServiceTest {
         UUID itemId = UUID.randomUUID();
         List<String> sizes = new ArrayList<>();
         Collections.addAll(sizes, "S", "M", "L", "XL", "XXL");
-
         ItemDomain savedDomain = new ItemDomain();
         savedDomain.setItemId(itemId);
         savedDomain.setItemName("Test Item");
@@ -76,15 +73,11 @@ public class itemServiceTest {
         savedDomain.setSKU("SKU-001");
         savedDomain.setSize(sizes);
         savedDomain.setStock(50);
-
         System.out.println("Item ID2: " + savedDomain.getItemId());
         Item result = mapItemDomainToModel(savedDomain);
-
         itemService.createItem(result);
-
         when(itemRepository.findByItemId(itemId)).thenReturn(savedDomain);
         when(itemRepository.save(Mockito.any(ItemDomain.class))).thenReturn(savedDomain);
-
         assertNotNull(result);
         assertEquals(itemId, result.getItemId());
         assertEquals("Test Item", result.getItemName());
@@ -97,28 +90,21 @@ public class itemServiceTest {
         item1.setItemId(UUID.randomUUID());
         item1.setItemName("Item 1");
         item1.setCategory("Category A");
-
         ItemDomain item2 = new ItemDomain();
         item2.setItemId(UUID.randomUUID());
         item2.setItemName("Item 2");
         item2.setCategory("Category B");
-
         List<ItemDomain> items = Arrays.asList(item1, item2);
         when(itemRepository.findAll()).thenReturn(items);
-
         List<Item> result = itemService.getAllItems();
-
         assertEquals(2, result.size());
         verify(itemRepository, times(1)).findAll();
-
     }
 
     @Test
     void testGetItemByItemId() {
         UUID itemId = mockItem.getItemId();
-
         String blank = itemId.toString();
-
         when(itemRepository.findByItemId(mockItem.getItemId())).thenReturn(mockItem);
         Item result = itemService.getItem(mockItem.getItemId());
         assertNotNull(result);
@@ -138,14 +124,11 @@ public class itemServiceTest {
     @Test
     void testUpdateItem() {
         UUID itemId = UUID.randomUUID();
-
         mockItem.setItemId(itemId);
         mockItem.setItemName("Old Item");
         mockItem.setCategory("Old Category");
-
         when(itemRepository.findByItemId(itemId)).thenReturn(mockItem);
         when(itemRepository.insert(Mockito.any(ItemDomain.class))).thenReturn(mockItem);
-
         Item itemUpdate = new Item();
         itemUpdate.setItemId(itemId);
         itemUpdate.setItemName("Updated Item");
@@ -155,11 +138,9 @@ public class itemServiceTest {
         itemUpdate.setPrice(49.99);
         itemUpdate.setSKU("SKU999");
         itemUpdate.setSize(List.of("L", "XL"));
-
         Item result = itemService.updateItem(itemId, itemUpdate);
         assertNotNull(result);
         assertEquals("Updated Item", result.getItemName());
-
         verify(itemRepository).findByItemId(itemId);
         verify(itemRepository).insert(Mockito.any(ItemDomain.class));
     }
