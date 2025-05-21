@@ -1,19 +1,21 @@
 package com.portfolio.microservices.serviceTest;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 
 import com.portfolio.itemservice.domain.ItemDomain;
@@ -28,16 +30,17 @@ public class itemServiceTest {
 
     @Mock
     ItemRepository itemRepository;
+    ItemDomain mockItem = new ItemDomain();
+
     @InjectMocks
-    ItemService itemService;
-    private ItemDomain mockItem;
+    ItemService itemService = new ItemService(itemRepository);
 
     @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-        mockItem = new ItemDomain();
+    public void setUp() {
+        MockitoAnnotations.openMocks(itemServiceTest.class);
+        // Initialize the mockItem with a UUID
         UUID itemId = UUID.randomUUID();
-        mockItem.setItemId(itemId);
+        mockItem.setItemDomainId(itemId);
     }
 
     private Item mapItemDomainToModel(ItemDomain itemDomain) {
@@ -45,14 +48,29 @@ public class itemServiceTest {
             return null; // Defensive coding to avoid NPE
         }
         Item item = new Item();
-        item.setItemId(itemDomain.getItemId());
-        item.setCategory(itemDomain.getCategory());
-        item.setDescription(itemDomain.getDescription());
-        item.setImage(itemDomain.getImage());
-        item.setItemName(itemDomain.getItemName());
-        item.setPrice(itemDomain.getPrice());
-        item.setSKU(itemDomain.getSKU());
-        item.setSize(itemDomain.getSize());
+        ItemDomain wrapper = new ItemDomain(
+                itemDomain.getSKU(),
+                itemDomain.getCategory(),
+                itemDomain.getColor(),
+                itemDomain.getDescription(),
+                itemDomain.getId(),
+                itemDomain.getImage(),
+                itemDomain.getItemDomainId(),
+                itemDomain.getItemName(),
+                itemDomain.getPrice(),
+                itemDomain.getSize(),
+                itemDomain.getStock()
+        );
+        item.setItemId(wrapper.getItemDomainId());
+        item.setItemName(wrapper.getItemName());
+        item.setCategory(wrapper.getCategory());
+        item.setSKU(wrapper.getSKU());
+        item.setPrice(wrapper.getPrice());
+        item.setDescription(wrapper.getDescription());
+        item.setImage(wrapper.getImage());
+        item.setSize(wrapper.getSize());
+        item.setColor(wrapper.getColor());
+        item.setStock(wrapper.getStock());
         return item;
     }
 
@@ -63,21 +81,24 @@ public class itemServiceTest {
         UUID itemId = UUID.randomUUID();
         List<String> sizes = new ArrayList<>();
         Collections.addAll(sizes, "S", "M", "L", "XL", "XXL");
-        ItemDomain savedDomain = new ItemDomain();
-        savedDomain.setItemId(itemId);
-        savedDomain.setItemName("Test Item");
-        savedDomain.setCategory("Category A");
-        savedDomain.setDescription("A description");
-        savedDomain.setImage("image.jpg");
-        savedDomain.setPrice(99.99);
-        savedDomain.setSKU("SKU-001");
-        savedDomain.setSize(sizes);
-        savedDomain.setStock(50);
-        System.out.println("Item ID2: " + savedDomain.getItemId());
+        ItemDomain savedDomain = new ItemDomain(
+                "SKU-001",
+                "Category A",
+                null,
+                "A description",
+                null,
+                "image.jpg",
+                itemId,
+                "Test Item",
+                99.99,
+                sizes,
+                50
+        );
+        System.out.println("Item ID2: " + savedDomain.getItemDomainId());
         Item result = mapItemDomainToModel(savedDomain);
-        itemService.createItem(result);
         when(itemRepository.findByItemId(itemId)).thenReturn(savedDomain);
         when(itemRepository.save(Mockito.any(ItemDomain.class))).thenReturn(savedDomain);
+        itemService.createItem(result);
         assertNotNull(result);
         assertEquals(itemId, result.getItemId());
         assertEquals("Test Item", result.getItemName());
@@ -87,11 +108,11 @@ public class itemServiceTest {
     @Test
     void testGetAllItems() {
         ItemDomain item1 = new ItemDomain();
-        item1.setItemId(UUID.randomUUID());
+        item1.setItemDomainId(UUID.randomUUID());
         item1.setItemName("Item 1");
         item1.setCategory("Category A");
         ItemDomain item2 = new ItemDomain();
-        item2.setItemId(UUID.randomUUID());
+        item2.setItemDomainId(UUID.randomUUID());
         item2.setItemName("Item 2");
         item2.setCategory("Category B");
         List<ItemDomain> items = Arrays.asList(item1, item2);
@@ -103,10 +124,10 @@ public class itemServiceTest {
 
     @Test
     void testGetItemByItemId() {
-        UUID itemId = mockItem.getItemId();
+        UUID itemId = mockItem.getItemDomainId();
         String blank = itemId.toString();
-        when(itemRepository.findByItemId(mockItem.getItemId())).thenReturn(mockItem);
-        Item result = itemService.getItem(mockItem.getItemId());
+        when(itemRepository.findByItemId(mockItem.getItemDomainId())).thenReturn(mockItem);
+        Item result = itemService.getItem(mockItem.getItemDomainId());
         assertNotNull(result);
         UUID idString = UUID.fromString(blank);
         assertEquals(itemId, result.getItemId());
@@ -115,7 +136,7 @@ public class itemServiceTest {
 
     @Test
     void testDeleteItem() {
-        UUID itemId = mockItem.getItemId();
+        UUID itemId = mockItem.getItemDomainId();
         when(itemRepository.findByItemId(itemId)).thenReturn(mockItem);
         itemService.deleteItem(itemId);
         verify(itemRepository, times(1)).delete(mockItem);
@@ -124,7 +145,7 @@ public class itemServiceTest {
     @Test
     void testUpdateItem() {
         UUID itemId = UUID.randomUUID();
-        mockItem.setItemId(itemId);
+        mockItem.setItemDomainId(itemId);
         mockItem.setItemName("Old Item");
         mockItem.setCategory("Old Category");
         when(itemRepository.findByItemId(itemId)).thenReturn(mockItem);
