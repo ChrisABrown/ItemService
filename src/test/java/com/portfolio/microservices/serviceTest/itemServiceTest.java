@@ -10,14 +10,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
+import com.portfolio.itemservice.ItemApiApplication;
 import com.portfolio.itemservice.domain.ItemDomain;
 import com.portfolio.itemservice.repository.ItemRepository;
 import com.portfolio.itemservice.service.ItemService;
@@ -26,14 +28,14 @@ import com.portfolio.itemservice.suprimeapi.model.Item;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
+@SpringBootTest(classes = ItemApiApplication.class)
 public class itemServiceTest {
 
-    @Mock
+    @Autowired
+    ItemService itemService;
+    @MockitoBean
     ItemRepository itemRepository;
     ItemDomain mockItem = new ItemDomain();
-
-    @InjectMocks
-    ItemService itemService = new ItemService(itemRepository);
 
     @BeforeEach
     public void setUp() {
@@ -94,10 +96,10 @@ public class itemServiceTest {
                 sizes,
                 50
         );
-        System.out.println("Item ID2: " + savedDomain.getItemDomainId());
+        // System.out.println("Item ID2: " + savedDomain.getItemDomainId());
         Item result = mapItemDomainToModel(savedDomain);
-        when(itemRepository.findByItemId(itemId)).thenReturn(savedDomain);
-        when(itemRepository.save(Mockito.any(ItemDomain.class))).thenReturn(savedDomain);
+        when(itemRepository.findByItemId(itemId)).thenReturn(null);
+        when(itemRepository.insert(Mockito.any(ItemDomain.class))).thenReturn(savedDomain);
         itemService.createItem(result);
         assertNotNull(result);
         assertEquals(itemId, result.getItemId());

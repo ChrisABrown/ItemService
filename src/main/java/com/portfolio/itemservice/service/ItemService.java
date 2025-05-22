@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import com.portfolio.itemservice.domain.ItemDomain;
@@ -13,11 +12,11 @@ import com.portfolio.itemservice.repository.ItemRepository;
 import com.portfolio.itemservice.suprimeapi.model.Item;
 
 @Service
-@Lazy
+
 public class ItemService {
 
     @Autowired
-    private ItemRepository repo;
+    private final ItemRepository repo;
     private final String ITEM_NOT_FOUND = "Item not found with id: ";
     private final String MODEL_ERROR_MESSAGE = "Error in in mapping model to domain: ";
     private final String DOMAIN_ERROR_MESSAGE = "Error in in mapping domain to model: ";

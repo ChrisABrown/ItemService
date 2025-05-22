@@ -16,7 +16,7 @@ class MicroservicesApplicationTests {
     // This test case is used to check if the Spring application context loads successfully
 
     @Autowired
-    ItemService itemService = null;
+    ItemService itemService;
     // Autowire the ItemService to test its functionality
 
     @Test
@@ -28,7 +28,7 @@ class MicroservicesApplicationTests {
 
     @Test
     void test() {
-        if (itemService != null) {
+        if (itemService == null) {
             throw new AssertionError("ItemService is not loaded");
         }
     }
