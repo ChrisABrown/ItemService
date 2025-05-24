@@ -12,7 +12,7 @@ servers:
     description: Local development server (HTTP)
 
 tags:
-  - name: Suprime API
+  - name: Item API
 
 paths:
 
